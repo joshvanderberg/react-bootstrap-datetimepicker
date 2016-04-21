@@ -275,25 +275,43 @@ export default class DateTimeField extends Component {
       };
       offset.top = offset.top + this.refs.datetimepicker.offsetHeight;
       scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-      placePosition = this.props.direction === "up" ? "top" : this.props.direction === "bottom" ? "bottom" : this.props.direction === "auto" ? offset.top + this.refs.widget.offsetHeight > window.offsetHeight + scrollTop && this.refs.widget.offsetHeight + this.refs.datetimepicker.offsetHeight > offset.top ? "top" : "bottom" : void 0;
-      if (placePosition === "top") {
+
+	  let direction = this.props.direction;
+	  let horizontalPosition;
+	  if (direction) {
+		  direction = direction.toLowerCase();
+	      horizontalPosition = (direction.indexOf('left')) ? 'left' : 'right';
+		  direction = direction.replace('left','').replace('right','');
+	  }
+
+	  placePosition = direction === "up" ? "top" : direction === "bottom" ? "bottom" : direction === "auto" ? offset.top + this.refs.widget.offsetHeight > window.offsetHeight + scrollTop && this.refs.widget.offsetHeight + this.refs.datetimepicker.offsetHeight > offset.top ? "top" : "bottom" : void 0;
+
+	  if (placePosition === "top") {
         offset.top = -this.refs.widget.offsetHeight - this.clientHeight - 2;
         classes.top = true;
         classes.bottom = false;
-        classes["pull-right"] = true;
-      } else {
+	  } else {
         offset.top = 40;
         classes.top = false;
         classes.bottom = true;
-        classes["pull-right"] = true;
       }
+
       styles = {
         display: "block",
         position: "absolute",
         top: offset.top,
-        left: "auto",
-        right: 40
       };
+
+	  if (horizontalPosition === 'left') {
+		  styles.left = 0,
+		  styles.right = "auto"
+		  classes["pull-right"] = false;
+	  } else {
+		  styles.left = "auto",
+		  styles.right = 25;
+		  classes["pull-right"] = true;
+	  }
+
       return this.setState({
         widgetStyle: styles,
         widgetClasses: classes
@@ -384,4 +402,3 @@ export default class DateTimeField extends Component {
     );
   }
 }
-

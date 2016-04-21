@@ -347,25 +347,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	        offset.top = offset.top + _this.refs.datetimepicker.offsetHeight;
 	        scrollTop = window.pageYOffset !== undefined ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-	        placePosition = _this.props.direction === "up" ? "top" : _this.props.direction === "bottom" ? "bottom" : _this.props.direction === "auto" ? offset.top + _this.refs.widget.offsetHeight > window.offsetHeight + scrollTop && _this.refs.widget.offsetHeight + _this.refs.datetimepicker.offsetHeight > offset.top ? "top" : "bottom" : void 0;
+
+	        var direction = _this.props.direction;
+	        var horizontalPosition = undefined;
+	        if (direction) {
+	          direction = direction.toLowerCase();
+	          horizontalPosition = direction.indexOf('left') ? 'left' : 'right';
+	          direction = direction.replace('left', '').replace('right', '');
+	        }
+
+	        placePosition = direction === "up" ? "top" : direction === "bottom" ? "bottom" : direction === "auto" ? offset.top + _this.refs.widget.offsetHeight > window.offsetHeight + scrollTop && _this.refs.widget.offsetHeight + _this.refs.datetimepicker.offsetHeight > offset.top ? "top" : "bottom" : void 0;
+
 	        if (placePosition === "top") {
 	          offset.top = -_this.refs.widget.offsetHeight - _this.clientHeight - 2;
 	          classes.top = true;
 	          classes.bottom = false;
-	          classes["pull-right"] = true;
 	        } else {
 	          offset.top = 40;
 	          classes.top = false;
 	          classes.bottom = true;
-	          classes["pull-right"] = true;
 	        }
+
 	        styles = {
 	          display: "block",
 	          position: "absolute",
-	          top: offset.top,
-	          left: "auto",
-	          right: 40
+	          top: offset.top
 	        };
+
+	        if (horizontalPosition === 'left') {
+	          styles.left = 0, styles.right = "auto";
+	          classes["pull-right"] = false;
+	        } else {
+	          styles.left = "auto", styles.right = 25;
+	          classes["pull-right"] = true;
+	        }
+
 	        return _this.setState({
 	          widgetStyle: styles,
 	          widgetClasses: classes
@@ -401,10 +417,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        bottom: 0,
 	        left: 0,
 	        right: 0,
-	        zIndex: "999"
+	        zIndex: "" + _this.props.zIndex
 	      };
 	      if (_this.state.showPicker) {
-	        return _react2["default"].createElement("div", { onClick: _this.closePicker, style: styles });
+	        return _react2["default"].createElement("div", { className: "bootstrap-datetimepicker-overlay", onClick: _this.closePicker, style: styles });
 	      } else {
 	        return _react2["default"].createElement("span", null);
 	      }
@@ -472,6 +488,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      daysOfWeekDisabled: [],
 	      size: _ConstantsJs2["default"].SIZE_MEDIUM,
 	      mode: _ConstantsJs2["default"].MODE_DATETIME,
+	      zIndex: 999,
 	      onChange: function onChange(x) {
 	        console.log(x);
 	      }
@@ -492,6 +509,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      direction: _react.PropTypes.string,
 	      showToday: _react.PropTypes.bool,
 	      viewMode: _react.PropTypes.string,
+	      zIndex: _react.PropTypes.number,
 	      size: _react.PropTypes.oneOf([_ConstantsJs2["default"].SIZE_SMALL, _ConstantsJs2["default"].SIZE_MEDIUM, _ConstantsJs2["default"].SIZE_LARGE]),
 	      daysOfWeekDisabled: _react.PropTypes.arrayOf(_react.PropTypes.number)
 	    },
@@ -1064,8 +1082,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2015 Jed Watson.
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
 	  Licensed under the MIT License (MIT), see
 	  http://jedwatson.github.io/classnames
 	*/
@@ -1077,7 +1095,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var hasOwn = {}.hasOwnProperty;
 
 		function classNames () {
-			var classes = '';
+			var classes = [];
 
 			for (var i = 0; i < arguments.length; i++) {
 				var arg = arguments[i];
@@ -1086,28 +1104,28 @@ return /******/ (function(modules) { // webpackBootstrap
 				var argType = typeof arg;
 
 				if (argType === 'string' || argType === 'number') {
-					classes += ' ' + arg;
+					classes.push(arg);
 				} else if (Array.isArray(arg)) {
-					classes += ' ' + classNames.apply(null, arg);
+					classes.push(classNames.apply(null, arg));
 				} else if (argType === 'object') {
 					for (var key in arg) {
 						if (hasOwn.call(arg, key) && arg[key]) {
-							classes += ' ' + key;
+							classes.push(key);
 						}
 					}
 				}
 			}
 
-			return classes.substr(1);
+			return classes.join(' ');
 		}
 
 		if (typeof module !== 'undefined' && module.exports) {
 			module.exports = classNames;
 		} else if (true) {
 			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 				return classNames;
-			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 		} else {
 			window.classNames = classNames;
 		}
