@@ -280,7 +280,7 @@ export default class DateTimeField extends Component {
 	  let horizontalPosition;
 	  if (direction) {
 		  direction = direction.toLowerCase();
-	      horizontalPosition = (direction.indexOf('left')) ? 'left' : 'right';
+	      horizontalPosition = (direction.indexOf('left')>-1) ? 'left' : 'right';
 		  direction = direction.replace('left','').replace('right','');
 	  }
 
